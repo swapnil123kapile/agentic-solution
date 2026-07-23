@@ -9,7 +9,6 @@ export function ChatInput() {
   const loading = useAppStore((s) => s.loading);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Auto-resize textarea
   useEffect(() => {
     const el = textareaRef.current;
     if (!el) return;
@@ -48,7 +47,7 @@ export function ChatInput() {
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={onKey}
-          placeholder="Ask the AI to build a section…"
+          placeholder="Ask about your simulation…"
           className="max-h-[120px] flex-1 resize-none bg-transparent py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none scrollbar-thin"
         />
         <button className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-muted-foreground transition hover:bg-muted hover:text-foreground">
@@ -59,20 +58,14 @@ export function ChatInput() {
           disabled={!value.trim() || loading}
           className={cn(
             'flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition',
-            value.trim() && !loading
-              ? 'bg-primary text-white shadow-glow hover:bg-primary/90'
-              : 'bg-muted text-muted-foreground cursor-not-allowed'
+            value.trim() && !loading ? 'bg-primary text-white shadow-glow hover:bg-primary/90' : 'bg-muted text-muted-foreground cursor-not-allowed'
           )}
         >
-          {loading ? (
-            <Sparkles className="h-[18px] w-[18px] animate-pulse" />
-          ) : (
-            <Send className="h-[18px] w-[18px]" />
-          )}
+          {loading ? <Sparkles className="h-[18px] w-[18px] animate-pulse" /> : <Send className="h-[18px] w-[18px]" />}
         </button>
       </div>
       <p className="mt-1.5 text-center text-[10px] text-muted-foreground">
-        AI-generated content is illustrative. Verify figures before client delivery.
+        AI analysis is illustrative. Verify figures before client delivery.
       </p>
     </div>
   );

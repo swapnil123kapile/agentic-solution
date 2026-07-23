@@ -1,179 +1,207 @@
 // ============================================================
-// PitchBook Advisory Assistant — Shared TypeScript Types
+// Boardroom AI — AI Lending Advisory Platform
+// Shared TypeScript Types
 // ============================================================
 
 export type Role = 'user' | 'assistant';
-
 export type AIModel = 'GPT-4o' | 'Claude 3.5' | 'Gemini 1.5';
+
+export interface ChatIntent {
+  sectionKey: SimulationSectionKey | null;
+  markdown: string;
+}
 
 export interface ChatMessage {
   id: string;
   role: Role;
   content: string;
   createdAt: number;
-  section?: PitchBookSectionKey;
+  section?: SimulationSectionKey;
   streaming?: boolean;
 }
 
-// ---------- Section keys ----------
-export type PitchBookSectionKey =
-  | 'executiveSummary'
-  | 'clientSnapshot'
-  | 'industryOverview'
-  | 'keyTrends'
-  | 'competitiveLandscape'
-  | 'growthOpportunities'
-  | 'recentMA'
-  | 'potentialTargets'
-  | 'strategicRecommendations'
-  | 'nextSteps';
+export type SimulationStatus = 'idle' | 'running' | 'completed' | 'failed';
 
-// ---------- 1. Executive Summary ----------
-export interface ExecutiveSummary {
-  overview: string;
-  highlights: string[];
-  keyTakeaway: string;
-}
+export type SimulationSectionKey =
+  | 'simulationSummary'
+  | 'currentKpis'
+  | 'simulationProgress'
+  | 'bankPerformance'
+  | 'customerFunnel'
+  | 'lossAnalysis'
+  | 'improvementSimulator'
+  | 'recommendations'
+  | 'customerFeedback'
+  | 'scenarioComparison';
 
-// ---------- 2. Client Snapshot ----------
-export interface ClientSnapshot {
-  clientName: string;
-  industry: string;
-  relationshipManager: string;
-  region: string;
-  revenue: string;
-  employees: string;
-  engagementObjective: string;
-}
-
-// ---------- 3. Industry Overview ----------
-export interface IndustryOverview {
-  marketSize: string;
-  cagr: string;
-  growth: string;
-  chart: { year: string; value: number }[];
-  highlights: string[];
-}
-
-// ---------- 4. Key Trends ----------
-export type TrendImpact = 'high' | 'medium' | 'low';
-export interface KeyTrend {
-  id: string;
-  title: string;
-  impact: TrendImpact;
+// ---------- Card 1: Simulation Summary ----------
+export interface SimulationSummary {
+  scenarioName: string;
+  status: SimulationStatus;
+  currentTimestep: number;
+  totalTimesteps: number;
+  progress: number; // 0-100
+  personas: { banks: number; consumers: number };
   description: string;
 }
-export interface KeyTrends {
-  trends: KeyTrend[];
+
+// ---------- Card 2: Current KPIs ----------
+export interface SimulationKpis {
+  dbWins: number;
+  competitorWins: number;
+  dropOffs: number;
+  recoverableLosses: number;
+  dbWinRate: number; // percentage
+  totalCustomers: number;
 }
 
-// ---------- 5. Competitive Landscape ----------
-export interface Competitor {
+// ---------- Card 3: Simulation Progress ----------
+export interface ReplayStep {
+  timestep: number;
+  label: string;
+  dbWins: number;
+  competitorWins: number;
+  dropOffs: number;
+}
+export interface SimulationProgress {
+  steps: ReplayStep[];
+}
+
+// ---------- Card 4: Bank Performance ----------
+export interface BankPerformance {
+  bank: string;
+  winRate: number;
+  offers: number;
+  approvalRate: number;
+}
+export interface BankPerformanceData {
+  banks: BankPerformance[];
+}
+
+// ---------- Card 5: Customer Funnel ----------
+export interface FunnelStage {
   id: string;
-  name: string;
-  marketShare: number;
+  stage: string;
+  value: number;
+  color: string;
 }
-export interface CompetitiveLandscape {
-  competitors: Competitor[];
-  chart: { name: string; share: number }[];
+export interface CustomerFunnel {
+  stages: FunnelStage[];
 }
 
-// ---------- 6. Growth Opportunities ----------
-export interface GrowthOpportunity {
+// ---------- Card 6: Loss Analysis ----------
+export interface LossReason {
   id: string;
-  title: string;
-  description: string;
-  icon: string;
+  reason: string;
+  value: number;
+  color: string;
 }
-export interface GrowthOpportunities {
-  opportunities: GrowthOpportunity[];
-}
-
-// ---------- 7. Recent M&A ----------
-export interface MARecord {
-  id: string;
-  company: string;
-  acquirer: string;
-  dealSize: string;
-  date: string;
-}
-export interface RecentMA {
-  records: MARecord[];
+export interface LossAnalysis {
+  totalLosses: number;
+  reasons: LossReason[];
+  topReason: string;
+  recommendation: string;
 }
 
-// ---------- 8. Potential Targets ----------
-export type FitRecommendation = 'Strong Fit' | 'Good Fit' | 'Watch';
-export interface PotentialTarget {
-  id: string;
-  company: string;
-  industry: string;
-  fitScore: number;
-  recommendation: FitRecommendation;
-}
-export interface PotentialTargets {
-  targets: PotentialTarget[];
-}
-
-// ---------- 9. Strategic Recommendations ----------
-export type Priority = 'high' | 'medium' | 'low';
-export interface StrategicRecommendation {
-  id: string;
-  title: string;
-  owner: string;
-  priority: Priority;
-  expectedImpact: string;
-  completed: boolean;
-}
-export interface StrategicRecommendations {
-  recommendations: StrategicRecommendation[];
-}
-
-// ---------- 10. Next Steps ----------
-export type TimelineStatus = 'completed' | 'active' | 'pending';
-export interface TimelineStep {
+// ---------- Card 7: Improvement Simulator ----------
+export interface ImprovementToggle {
   id: string;
   label: string;
-  status: TimelineStatus;
-  date: string;
+  description: string;
+  icon: string;
+  active: boolean;
+  // projected deltas when active
+  winRateDelta: number;
+  recoverableDelta: number;
+  dropOffDelta: number;
 }
-export interface NextSteps {
-  steps: TimelineStep[];
+export interface ImprovementProjection {
+  projectedWinRate: number;
+  projectedRecoverable: number;
+  projectedDropOffs: number;
+  uplift: number;
 }
-
-// ---------- Full PitchBook ----------
-export interface PitchBook {
-  clientSnapshot: ClientSnapshot | null;
-  executiveSummary: ExecutiveSummary | null;
-  industryOverview: IndustryOverview | null;
-  keyTrends: KeyTrends | null;
-  competitiveLandscape: CompetitiveLandscape | null;
-  growthOpportunities: GrowthOpportunities | null;
-  recentMA: RecentMA | null;
-  potentialTargets: PotentialTargets | null;
-  strategicRecommendations: StrategicRecommendations | null;
-  nextSteps: NextSteps | null;
+export interface ImprovementSimulator {
+  toggles: ImprovementToggle[];
 }
 
-export type GeneratedSections = Record<PitchBookSectionKey, boolean>;
+// ---------- Card 8: Recommendations ----------
+export type Priority = 'high' | 'medium' | 'low';
+export type Complexity = 'high' | 'medium' | 'low';
+export interface Recommendation {
+  id: string;
+  title: string;
+  description: string;
+  priority: Priority;
+  expectedImpact: string;
+  complexity: Complexity;
+  owner: string;
+}
+export interface Recommendations {
+  recommendations: Recommendation[];
+}
 
-export type CollapseState = Record<PitchBookSectionKey, boolean>;
+// ---------- Card 9: Customer Feedback ----------
+export type Sentiment = 'positive' | 'neutral' | 'negative';
+export interface FeedbackEntry {
+  id: string;
+  customer: string;
+  persona: string;
+  sentiment: Sentiment;
+  rating: number; // 1-5
+  comment: string;
+  timestep: number;
+}
+export interface CustomerFeedback {
+  entries: FeedbackEntry[];
+}
+
+// ---------- Card 10: Scenario Comparison ----------
+export interface ScenarioKpi {
+  label: string;
+  baseline: number;
+  improved: number;
+}
+export interface ScenarioComparison {
+  baselineName: string;
+  improvedName: string;
+  kpis: ScenarioKpi[];
+  summary: string;
+}
+
+// ---------- Full Simulation State ----------
+export interface Simulation {
+  summary: SimulationSummary;
+  kpis: SimulationKpis;
+  progress: SimulationProgress;
+  bankPerformance: BankPerformanceData;
+  funnel: CustomerFunnel;
+  losses: LossAnalysis;
+  improvements: ImprovementSimulator;
+  recommendations: Recommendations;
+  feedback: CustomerFeedback;
+  comparison: ScenarioComparison;
+}
 
 export interface SectionMeta {
-  key: PitchBookSectionKey;
+  key: SimulationSectionKey;
   number: number;
   title: string;
   icon: string;
 }
 
 export const SECTION_ORDER: SectionMeta[] = [
-  { key: 'executiveSummary', number: 1, title: 'Executive Summary', icon: 'FileText' },
-  { key: 'clientSnapshot', number: 2, title: 'Client Snapshot', icon: 'Building2' },
-  { key: 'industryOverview', number: 3, title: 'Industry Overview', icon: 'BarChart3' },
-  { key: 'keyTrends', number: 4, title: 'Key Trends', icon: 'TrendingUp' },
-  { key: 'competitiveLandscape', number: 5, title: 'Competitive Landscape', icon: 'Target' },
-  { key: 'growthOpportunities', number: 6, title: 'Growth Opportunities', icon: 'Rocket' },
-  { key: 'recentMA', number: 7, title: 'Recent M&A', icon: 'Handshake' },
-  { key: 'potentialTargets', number: 8, title: 'Potential Targets', icon: 'Crosshair' },
-  { key: 'strategicRecommendations', number: 9, title: 'Strategic Recommendations', icon: 'ListChecks' },
-  { key: 'nextSteps', number: 10, title: 'Next Steps', icon: 'Milestone' },
+  { key: 'simulationSummary', number: 1, title: 'Simulation Summary', icon: 'Activity' },
+  { key: 'currentKpis', number: 2, title: 'Current KPIs', icon: 'Gauge' },
+  { key: 'simulationProgress', number: 3, title: 'Simulation Progress', icon: 'PlayCircle' },
+  { key: 'bankPerformance', number: 4, title: 'Bank Performance', icon: 'Building2' },
+  { key: 'customerFunnel', number: 5, title: 'Customer Funnel', icon: 'Filter' },
+  { key: 'lossAnalysis', number: 6, title: 'Loss Analysis', icon: 'TrendingDown' },
+  { key: 'improvementSimulator', number: 7, title: 'Improvement Simulator', icon: 'SlidersHorizontal' },
+  { key: 'recommendations', number: 8, title: 'Recommendations', icon: 'Lightbulb' },
+  { key: 'customerFeedback', number: 9, title: 'Customer Feedback', icon: 'MessageSquareQuote' },
+  { key: 'scenarioComparison', number: 10, title: 'Scenario Comparison', icon: 'GitCompare' },
 ];
+
+export const SCENARIOS = ['Baseline', 'Aggressive Pricing', 'Faster Approval', 'Digital-First', 'Premium Service'] as const;
+export type ScenarioName = (typeof SCENARIOS)[number];

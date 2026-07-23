@@ -19,7 +19,7 @@ export function ComingSoon({ title, description }: ComingSoonProps) {
         </div>
         <h1 className="text-lg font-bold text-foreground">{title}</h1>
         <p className="mt-1.5 text-sm text-muted-foreground">
-          {description ?? 'This workspace is under construction. The PitchBook Builder is where the action is.'}
+          {description ?? 'This workspace is under construction. The Simulation Builder is where the action is.'}
         </p>
       </motion.div>
     </div>

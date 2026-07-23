@@ -1,19 +1,18 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { Pencil, RefreshCw, ChevronsUpDown } from 'lucide-react';
-import type { PitchBookSectionKey } from '@/types';
+import { RefreshCw, ChevronsUpDown } from 'lucide-react';
+import type { SimulationSectionKey } from '@/types';
 import { useAppStore } from '@/store/useAppStore';
 import { Card } from '@/components/ui/card';
 import { SectionBadge, CardAction, ChevronToggle } from './CardPrimitives';
 import { cn } from '@/lib/utils';
 
 interface PreviewCardShellProps {
-  sectionKey: PitchBookSectionKey;
+  sectionKey: SimulationSectionKey;
   number: number;
   title: string;
   icon: React.ComponentType<{ className?: string }>;
-  generated: boolean;
   defaultOpen?: boolean;
-  onEdit?: () => void;
+  onRefresh?: () => void;
   children: React.ReactNode;
 }
 
@@ -22,16 +21,11 @@ export function PreviewCardShell({
   number,
   title,
   icon: Icon,
-  generated,
   defaultOpen = true,
-  onEdit,
+  onRefresh,
   children,
 }: PreviewCardShellProps) {
-  const collapsed = useAppStore((s) => s.collapseState[sectionKey]);
-  const toggleCollapse = useAppStore((s) => s.toggleCollapse);
-  const regenerateSection = useAppStore((s) => s.regenerateSection);
   const currentSection = useAppStore((s) => s.currentSection);
-  const open = defaultOpen && !collapsed;
   const isFresh = currentSection === sectionKey;
 
   return (
@@ -47,11 +41,8 @@ export function PreviewCardShell({
           isFresh ? 'border-primary/40 shadow-glow' : 'border-border shadow-soft hover:shadow-soft-md'
         )}
       >
-        {/* Header — clickable to collapse */}
-        <button
-          onClick={() => toggleCollapse(sectionKey)}
-          className="flex w-full items-center justify-between gap-3 px-4 py-3.5 text-left transition hover:bg-muted/40 lg:px-5"
-        >
+        {/* Header — clickable to collapse via the chevron area; actions are separate */}
+        <div className="flex w-full items-center justify-between gap-3 px-4 py-3.5 lg:px-5">
           <div className="flex min-w-0 items-center gap-3">
             <SectionBadge number={number} />
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/5 text-primary">
@@ -59,39 +50,35 @@ export function PreviewCardShell({
             </div>
             <div className="min-w-0">
               <h3 className="truncate text-sm font-semibold text-foreground">{title}</h3>
-              <p className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                {generated ? (
-                  <>
-                    <span className="h-1.5 w-1.5 rounded-full bg-success" />
-                    AI-generated
-                  </>
-                ) : (
-                  <>
-                    <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/40" />
-                    Pending
-                  </>
-                )}
-              </p>
+              {isFresh && (
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="flex items-center gap-1.5 text-[11px] font-medium text-primary"
+                >
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse-dot" />
+                  Updated by AI
+                </motion.p>
+              )}
             </div>
           </div>
 
           <div className="flex items-center gap-1">
-            <CardAction icon={Pencil} label="Edit" variant="accent" onClick={onEdit} />
-            <CardAction
-              icon={RefreshCw}
-              label="Regenerate"
-              variant="accent"
-              onClick={() => regenerateSection(sectionKey)}
-            />
-            <CardAction icon={ChevronsUpDown} label="Expand / Collapse" onClick={() => toggleCollapse(sectionKey)} />
-            <span className="ml-1 hidden sm:block">
-              <ChevronToggle open={open} />
-            </span>
+            {onRefresh && (
+              <CardAction icon={RefreshCw} label="Refresh from backend" variant="accent" onClick={onRefresh} />
+            )}
+            <CardAction icon={ChevronsUpDown} label="Expand / Collapse" onClick={undefined} />
+            <motion.button
+              whileTap={{ scale: 0.94 }}
+              className="ml-1 hidden text-muted-foreground sm:block"
+            >
+              <ChevronToggle open={defaultOpen} />
+            </motion.button>
           </div>
-        </button>
+        </div>
 
         <AnimatePresence initial={false}>
-          {open && (
+          {defaultOpen && (
             <motion.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}

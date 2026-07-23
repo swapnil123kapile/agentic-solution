@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bot, ChevronDown } from 'lucide-react';
+import { Bot } from 'lucide-react';
 import { useAppStore } from '@/store/useAppStore';
 import { AI_MODELS, modelTagline } from '@/services/aiService';
 import type { AIModel } from '@/types';
@@ -14,7 +14,6 @@ import {
 import { WelcomeCard } from './WelcomeCard';
 import { ChatMessageBubble } from './ChatMessageBubble';
 import { ChatInput } from './ChatInput';
-import { cn } from '@/lib/utils';
 
 export function CopilotPanel() {
   const messages = useAppStore((s) => s.messages);
@@ -22,7 +21,6 @@ export function CopilotPanel() {
   const setModel = useAppStore((s) => s.setModel);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to bottom on new messages / streaming updates
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
@@ -37,13 +35,13 @@ export function CopilotPanel() {
       <div className="flex items-center justify-between border-b border-border bg-white px-4 py-3">
         <div className="flex items-center gap-2.5">
           <div className="relative">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-blue-500 text-white shadow-glow">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-blue-600 text-white shadow-glow">
               <Bot className="h-[18px] w-[18px]" />
             </div>
             <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-success ring-2 ring-white" />
           </div>
           <div>
-            <p className="text-sm font-bold text-foreground">AI Copilot</p>
+            <p className="text-sm font-bold text-foreground">Boardroom AI</p>
             <p className="flex items-center gap-1 text-[11px] text-success">
               <span className="h-1.5 w-1.5 rounded-full bg-success" /> Online
             </p>

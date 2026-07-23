@@ -1,34 +1,34 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
-interface DonutDatum {
-  name: string;
-  share: number;
+interface LossDatum {
+  reason: string;
+  value: number;
+  color: string;
 }
 
-interface CompetitiveDonutChartProps {
-  data: DonutDatum[];
+interface LossAnalysisChartProps {
+  data: LossDatum[];
+  total: number;
 }
 
-const PALETTE = ['#2563EB', '#10B981', '#F59E0B', '#7C3AED', '#EF4444'];
-
-export function CompetitiveDonutChart({ data }: CompetitiveDonutChartProps) {
+export function LossAnalysisChart({ data, total }: LossAnalysisChartProps) {
   return (
     <div className="h-[240px] w-full">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
             data={data}
-            dataKey="share"
-            nameKey="name"
+            dataKey="value"
+            nameKey="reason"
             cx="50%"
             cy="50%"
-            innerRadius={56}
-            outerRadius={88}
+            innerRadius={54}
+            outerRadius={86}
             paddingAngle={2}
             stroke="none"
           >
-            {data.map((_, i) => (
-              <Cell key={i} fill={PALETTE[i % PALETTE.length]} />
+            {data.map((d, i) => (
+              <Cell key={i} fill={d.color} />
             ))}
           </Pie>
           <Tooltip
@@ -38,7 +38,7 @@ export function CompetitiveDonutChart({ data }: CompetitiveDonutChartProps) {
               boxShadow: '0 8px 24px -8px rgba(15,23,42,0.12)',
               fontSize: 12,
             }}
-            formatter={(v: number, n: string) => [`${v}%`, n]}
+            formatter={(v: number, n: string) => [`${v} (${((v / total) * 100).toFixed(1)}%)`, n]}
           />
           <Legend
             verticalAlign="bottom"
