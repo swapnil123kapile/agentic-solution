@@ -1,0 +1,163 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Brand + surfaces */
+    --background: 210 40% 98%;
+    --foreground: 215 28% 17%;
+    --card: 0 0% 100%;
+    --card-foreground: 215 28% 17%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 28% 17%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 215 28% 17%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 217 91% 60%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 215 28% 90%;
+    --input: 215 28% 90%;
+    --ring: 217 91% 60%;
+
+    /* Sidebar (dark navy) */
+    --sidebar: 222 47% 11%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-accent: 217 91% 60%;
+    --sidebar-accent-foreground: 0 0% 100%;
+
+    /* Semantic */
+    --success: 160 84% 39%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --danger: 0 84% 60%;
+    --danger-foreground: 0 0% 100%;
+
+    /* Charts */
+    --chart-1: 217 91% 60%;
+    --chart-2: 160 84% 39%;
+    --chart-3: 38 92% 50%;
+    --chart-4: 262 83% 58%;
+    --chart-5: 0 84% 60%;
+
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html,
+  body,
+  #root {
+    @apply h-full;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    margin: 0;
+  }
+}
+
+@layer utilities {
+  /* Custom scrollbar */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(215 28% 80%) transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: hsl(215 28% 85%);
+    border-radius: 9999px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(215 28% 75%);
+  }
+
+  .scrollbar-sidebar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .scrollbar-sidebar::-webkit-scrollbar-thumb {
+    background-color: hsl(215 28% 25%);
+    border-radius: 9999px;
+  }
+
+  /* Markdown rendering inside chat */
+  .prose-chat {
+    @apply text-sm leading-relaxed text-foreground;
+  }
+  .prose-chat p {
+    @apply my-2;
+  }
+  .prose-chat ul {
+    @apply my-2 list-disc pl-5 space-y-1;
+  }
+  .prose-chat ol {
+    @apply my-2 list-decimal pl-5 space-y-1;
+  }
+  .prose-chat li {
+    @apply leading-relaxed;
+  }
+  .prose-chat h1,
+  .prose-chat h2,
+  .prose-chat h3 {
+    @apply font-semibold text-foreground mt-3 mb-1.5;
+  }
+  .prose-chat h1 {
+    @apply text-base;
+  }
+  .prose-chat h2 {
+    @apply text-sm;
+  }
+  .prose-chat h3 {
+    @apply text-[13px];
+  }
+  .prose-chat strong {
+    @apply font-semibold text-foreground;
+  }
+  .prose-chat a {
+    @apply text-primary underline underline-offset-2;
+  }
+  .prose-chat blockquote {
+    @apply border-l-2 border-primary/40 pl-3 italic text-muted-foreground my-2;
+  }
+  .prose-chat code {
+    @apply rounded bg-muted px-1.5 py-0.5 text-[12px] font-mono text-foreground;
+  }
+  .prose-chat pre {
+    @apply my-2 rounded-lg bg-slate-900 p-3 text-[12px] text-slate-100 overflow-x-auto;
+  }
+  .prose-chat pre code {
+    @apply bg-transparent p-0 text-slate-100;
+  }
+  .prose-chat table {
+    @apply my-2 w-full border-collapse text-[12px];
+  }
+  .prose-chat th,
+  .prose-chat td {
+    @apply border border-border px-2.5 py-1.5 text-left;
+  }
+  .prose-chat th {
+    @apply bg-muted font-semibold;
+  }
+  .prose-chat hr {
+    @apply my-3 border-border;
+  }
+}
