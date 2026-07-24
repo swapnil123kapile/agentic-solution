@@ -82,6 +82,91 @@
 }
 
 @layer components {
+  /* Ambient background — layered glow orbs + grid + noise */
+  .bg-ambient {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .bg-ambient::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(hsl(var(--border) / 0.25) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--border) / 0.25) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%);
+  }
+
+  .bg-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+    will-change: transform;
+  }
+
+  .bg-orb-primary {
+    width: 480px;
+    height: 480px;
+    top: -120px;
+    right: 10%;
+    background: radial-gradient(circle, hsl(var(--primary) / 0.35), transparent 70%);
+    animation: orb-float-1 18s ease-in-out infinite;
+  }
+
+  .bg-orb-secondary {
+    width: 420px;
+    height: 420px;
+    bottom: -100px;
+    left: 15%;
+    background: radial-gradient(circle, hsl(var(--secondary) / 0.28), transparent 70%);
+    animation: orb-float-2 22s ease-in-out infinite;
+  }
+
+  .bg-orb-accent {
+    width: 360px;
+    height: 360px;
+    top: 40%;
+    left: 50%;
+    background: radial-gradient(circle, hsl(24 95% 56% / 0.12), transparent 70%);
+    animation: orb-float-3 26s ease-in-out infinite;
+  }
+
+  @keyframes orb-float-1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(-40px, 30px) scale(1.08); }
+    66% { transform: translate(20px, -20px) scale(0.95); }
+  }
+
+  @keyframes orb-float-2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(50px, -40px) scale(1.1); }
+  }
+
+  @keyframes orb-float-3 {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    33% { transform: translate(-40%, -55%) scale(1.05); }
+    66% { transform: translate(-60%, -45%) scale(0.95); }
+  }
+
+  /* Vignette for depth */
+  .bg-vignette::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse 120% 80% at 50% 50%, transparent 40%, hsl(var(--background) / 0.6) 100%);
+  }
+}
+
+@layer components {
   /* Glassmorphism card surface */
   .glass {
     background: hsl(var(--card) / 0.6);
