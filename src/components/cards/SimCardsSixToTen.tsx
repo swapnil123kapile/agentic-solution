@@ -231,7 +231,7 @@ export function CustomerFeedbackCard() {
                   </Badge>
                 </div>
                 <div className="mt-2 flex items-center gap-0.5">
-                  {Array.from({ length: 5 }).map((_, i) => <Star key={i} className={cn('h-3.5 w-3.5', i < e.rating ? 'fill-warning text-warning' : 'fill-muted text-muted')} />)}
+                  {Array.from({ length: 5 }).map((_, i) => <Star key={i} className={cn('h-3.5 w-3.5', i < e.rating ? 'fill-warning text-warning' : 'fill-muted text-muted-foreground')} />)}
                 </div>
                 <p className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">"{e.comment}"</p>
               </motion.div>

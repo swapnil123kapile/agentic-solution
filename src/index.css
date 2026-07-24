@@ -6,15 +6,15 @@
 
 @layer base {
   :root {
-    /* Dark glassmorphism theme — black / slate / orange + blue accents */
-    --background: 222 47% 5%;
-    --foreground: 210 40% 96%;
+    /* Light theme — clean white / slate / orange + blue accents */
+    --background: 210 20% 98%;
+    --foreground: 222 47% 11%;
 
-    --card: 222 40% 8%;
-    --card-foreground: 210 40% 96%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
 
-    --popover: 222 44% 10%;
-    --popover-foreground: 210 40% 96%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
 
     --primary: 24 95% 56%;
     --primary-foreground: 0 0% 100%;
@@ -25,22 +25,22 @@
     --accent: 24 95% 56%;
     --accent-foreground: 0 0% 100%;
 
-    --muted: 217 33% 12%;
-    --muted-foreground: 215 20% 55%;
+    --muted: 210 16% 93%;
+    --muted-foreground: 215 16% 47%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 217 33% 16%;
-    --input: 217 33% 14%;
+    --border: 214 20% 88%;
+    --input: 214 20% 90%;
     --ring: 24 95% 56%;
 
-    --sidebar: 222 50% 4%;
-    --sidebar-foreground: 215 20% 65%;
+    --sidebar: 210 20% 97%;
+    --sidebar-foreground: 215 16% 47%;
 
     --success: 142 71% 45%;
     --warning: 38 92% 50%;
-    --danger: 0 84% 60%;
+    --danger: 0 72% 51%;
     --info: 199 89% 48%;
 
     --radius: 0.75rem;
@@ -59,7 +59,7 @@
     font-variation-settings: 'opsz' 32;
   }
 
-  /* Custom scrollbar — thin, dark */
+  /* Custom scrollbar — thin, light */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -72,7 +72,7 @@
     border-radius: 999px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--muted-foreground) / 0.5);
+    background: hsl(var(--muted-foreground) / 0.4);
   }
 
   .scrollbar-thin {
@@ -82,7 +82,7 @@
 }
 
 @layer components {
-  /* Ambient background — layered glow orbs + grid + noise */
+  /* Ambient background — layered glow orbs + grid */
   .bg-ambient {
     position: fixed;
     inset: 0;
@@ -96,8 +96,8 @@
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(hsl(var(--border) / 0.25) 1px, transparent 1px),
-      linear-gradient(90deg, hsl(var(--border) / 0.25) 1px, transparent 1px);
+      linear-gradient(hsl(var(--border) / 0.4) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--border) / 0.4) 1px, transparent 1px);
     background-size: 48px 48px;
     mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%);
     -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%);
@@ -106,8 +106,7 @@
   .bg-orb {
     position: absolute;
     border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.5;
+    filter: blur(90px);
     will-change: transform;
   }
 
@@ -116,7 +115,7 @@
     height: 480px;
     top: -120px;
     right: 10%;
-    background: radial-gradient(circle, hsl(var(--primary) / 0.35), transparent 70%);
+    background: radial-gradient(circle, hsl(var(--primary) / 0.18), transparent 70%);
     animation: orb-float-1 18s ease-in-out infinite;
   }
 
@@ -125,7 +124,7 @@
     height: 420px;
     bottom: -100px;
     left: 15%;
-    background: radial-gradient(circle, hsl(var(--secondary) / 0.28), transparent 70%);
+    background: radial-gradient(circle, hsl(var(--secondary) / 0.14), transparent 70%);
     animation: orb-float-2 22s ease-in-out infinite;
   }
 
@@ -134,7 +133,7 @@
     height: 360px;
     top: 40%;
     left: 50%;
-    background: radial-gradient(circle, hsl(24 95% 56% / 0.12), transparent 70%);
+    background: radial-gradient(circle, hsl(24 95% 56% / 0.08), transparent 70%);
     animation: orb-float-3 26s ease-in-out infinite;
   }
 
@@ -162,28 +161,28 @@
     inset: 0;
     z-index: 0;
     pointer-events: none;
-    background: radial-gradient(ellipse 120% 80% at 50% 50%, transparent 40%, hsl(var(--background) / 0.6) 100%);
+    background: radial-gradient(ellipse 120% 80% at 50% 50%, transparent 50%, hsl(210 20% 90% / 0.4) 100%);
   }
 }
 
 @layer components {
-  /* Glassmorphism card surface */
+  /* Glassmorphism card surface — light */
   .glass {
-    background: hsl(var(--card) / 0.6);
+    background: hsl(var(--card) / 0.75);
     backdrop-filter: blur(16px) saturate(140%);
     -webkit-backdrop-filter: blur(16px) saturate(140%);
     border: 1px solid hsl(var(--border) / 0.8);
   }
 
   .glass-strong {
-    background: hsl(var(--card) / 0.85);
+    background: hsl(var(--card) / 0.9);
     backdrop-filter: blur(20px) saturate(160%);
     -webkit-backdrop-filter: blur(20px) saturate(160%);
     border: 1px solid hsl(var(--border) / 0.9);
   }
 
   .glass-nav {
-    background: hsl(var(--background) / 0.7);
+    background: hsl(var(--background) / 0.75);
     backdrop-filter: blur(20px) saturate(160%);
     -webkit-backdrop-filter: blur(20px) saturate(160%);
     border-bottom: 1px solid hsl(var(--border) / 0.6);
@@ -212,7 +211,7 @@
     pointer-events: none;
   }
 
-  /* Chat markdown styling — dark theme */
+  /* Chat markdown styling — light theme */
   .prose-chat {
     font-size: 0.8125rem;
     line-height: 1.6;

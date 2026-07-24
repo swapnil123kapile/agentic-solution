@@ -27,7 +27,7 @@ export function BankIntelligenceCard() {
               {/* Header row */}
               <button
                 onClick={() => setExpanded(isOpen ? null : bank.bankId)}
-                className="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-white/5"
+                className="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-black/5"
               >
                 <div
                   className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-xs font-bold text-white shadow-soft"

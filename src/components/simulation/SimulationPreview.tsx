@@ -33,7 +33,7 @@ export function SimulationPreview() {
         <div className="absolute inset-0 bg-glass-radial opacity-40" />
         <div className="relative flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-start gap-4">
-            <div className="mt-0.5 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-orange-600 text-white shadow-glow ring-1 ring-white/10">
+            <div className="mt-0.5 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-orange-600 text-white shadow-glow ring-1 ring-black/5">
               <FlaskConical className="h-6 w-6" />
             </div>
             <div>

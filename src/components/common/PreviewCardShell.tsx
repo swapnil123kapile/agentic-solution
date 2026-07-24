@@ -66,7 +66,7 @@ export function PreviewCardShell({
             {onRefresh && <CardAction icon={RefreshCw} label="Refresh from backend" variant="accent" onClick={onRefresh} />}
             <button
               onClick={() => setOpenState(!open)}
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-white/5 hover:text-foreground"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-black/5 hover:text-foreground"
             >
               <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }}>
                 <svg viewBox="0 0 16 16" className="h-4 w-4" fill="none">

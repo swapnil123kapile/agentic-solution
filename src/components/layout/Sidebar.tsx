@@ -14,7 +14,7 @@ import {
   FileText,
   Settings,
   LogOut,
-  BrainCircuit,
+  LayoutGrid,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -47,8 +47,8 @@ export function Sidebar() {
   return (
     <aside className="flex h-full w-[80px] shrink-0 flex-col items-center justify-between border-r border-border bg-sidebar py-4">
       <div className="flex flex-col items-center gap-1">
-        <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-orange-600 text-white shadow-glow ring-1 ring-white/10">
-          <BrainCircuit className="h-5 w-5" />
+        <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-orange-600 text-white shadow-glow ring-1 ring-black/5">
+          <LayoutGrid className="h-5 w-5" />
         </div>
         <nav className="flex flex-col items-center gap-1.5">
           {NAV_ITEMS.map((item) => {
@@ -67,7 +67,7 @@ export function Sidebar() {
                     'group flex h-11 w-11 items-center justify-center rounded-xl transition-all duration-200',
                     active
                       ? 'bg-gradient-to-br from-primary/90 to-orange-600/90 text-white shadow-glow'
-                      : 'text-sidebar-foreground hover:bg-white/5 hover:text-white'
+                      : 'text-sidebar-foreground hover:bg-black/5 hover:text-foreground'
                   )}
                 >
                   <Icon className="h-[19px] w-[19px]" />

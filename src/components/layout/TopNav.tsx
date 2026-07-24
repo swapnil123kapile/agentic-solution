@@ -4,7 +4,7 @@ import {
   Search,
   Bell,
   ChevronDown,
-  BrainCircuit,
+  LayoutGrid,
   Play,
   Pause,
   SkipForward,
@@ -62,13 +62,13 @@ export function TopNav({ onGenerate }: TopNavProps) {
       {/* Left: logo + name */}
       <div className="flex items-center gap-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-orange-600 text-white shadow-glow">
-          <BrainCircuit className="h-5 w-5" />
+          <LayoutGrid className="h-5 w-5" />
         </div>
         <div className="hidden flex-col leading-tight sm:flex">
           <span className="text-[15px] font-bold tracking-tight text-foreground">
             Boardroom <span className="gradient-text">AI</span>
           </span>
-          <span className="text-[11px] font-medium text-muted-foreground">Agentic Lending World</span>
+          <span className="text-[11px] font-medium text-muted-foreground">Advisory Platform</span>
         </div>
       </div>
 
@@ -107,7 +107,7 @@ export function TopNav({ onGenerate }: TopNavProps) {
           <button
             onClick={stepBackward}
             disabled={timestep <= 1}
-            className="flex h-7 w-7 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-white/10 hover:text-foreground disabled:opacity-30"
+            className="flex h-7 w-7 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-black/5 hover:text-foreground disabled:opacity-30"
           >
             <SkipBack className="h-4 w-4" />
           </button>
@@ -120,7 +120,7 @@ export function TopNav({ onGenerate }: TopNavProps) {
           <button
             onClick={stepForward}
             disabled={timestep >= total}
-            className="flex h-7 w-7 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-white/10 hover:text-foreground disabled:opacity-30"
+            className="flex h-7 w-7 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-black/5 hover:text-foreground disabled:opacity-30"
           >
             <SkipForward className="h-4 w-4" />
           </button>
@@ -135,7 +135,7 @@ export function TopNav({ onGenerate }: TopNavProps) {
         {/* Notifications */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="relative flex h-10 w-10 items-center justify-center rounded-xl text-muted-foreground transition hover:bg-white/5 hover:text-foreground">
+            <button className="relative flex h-10 w-10 items-center justify-center rounded-xl text-muted-foreground transition hover:bg-black/5 hover:text-foreground">
               <Bell className="h-[18px] w-[18px]" />
               <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-danger ring-2 ring-background" />
             </button>
@@ -180,7 +180,7 @@ export function TopNav({ onGenerate }: TopNavProps) {
         {/* Profile */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex items-center gap-2 rounded-xl p-1 pr-2 transition hover:bg-white/5">
+            <button className="flex items-center gap-2 rounded-xl p-1 pr-2 transition hover:bg-black/5">
               <Avatar className="h-8 w-8 ring-2 ring-primary/20">
                 <AvatarFallback className="bg-primary text-xs font-bold text-white">SS</AvatarFallback>
               </Avatar>

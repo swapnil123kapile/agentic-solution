@@ -40,7 +40,7 @@ export function CardAction({ icon: Icon, label, onClick, variant = 'default', di
       title={label}
       className={cn(
         'flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-all',
-        'hover:bg-white/5 hover:text-foreground',
+        'hover:bg-black/5 hover:text-foreground',
         variant === 'accent' && 'hover:bg-primary/10 hover:text-primary',
         variant === 'danger' && 'hover:bg-danger/10 hover:text-danger',
         disabled && 'cursor-not-allowed opacity-40 hover:bg-transparent hover:text-muted-foreground'

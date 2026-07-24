@@ -32,7 +32,7 @@ export function ChatInput() {
   return (
     <div className="border-t border-border bg-card/40 px-4 py-3">
       <div className={cn('flex items-end gap-2 rounded-2xl border bg-muted/30 p-2 transition', 'focus-within:border-primary/50 focus-within:bg-card focus-within:ring-4 focus-within:ring-primary/10', 'border-border')}>
-        <button className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-muted-foreground transition hover:bg-white/5 hover:text-foreground">
+        <button className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-muted-foreground transition hover:bg-black/5 hover:text-foreground">
           <Paperclip className="h-[18px] w-[18px]" />
         </button>
         <textarea
@@ -44,7 +44,7 @@ export function ChatInput() {
           placeholder="Ask about your simulation…"
           className="max-h-[120px] flex-1 resize-none bg-transparent py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none scrollbar-thin"
         />
-        <button className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-muted-foreground transition hover:bg-white/5 hover:text-foreground">
+        <button className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-muted-foreground transition hover:bg-black/5 hover:text-foreground">
           <Mic className="h-[18px] w-[18px]" />
         </button>
         <button

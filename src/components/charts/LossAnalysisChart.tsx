@@ -11,7 +11,7 @@ export function LossAnalysisChart({ data, total }: { data: { reason: string; val
             {data.map((d, i) => <Cell key={i} fill={d.color} />)}
           </Pie>
           <Tooltip
-            contentStyle={{ borderRadius: 12, border: '1px solid rgba(148,163,184,0.15)', background: 'hsl(222 44% 10% / 0.95)', backdropFilter: 'blur(8px)', fontSize: 12, color: '#E2E8F0' }}
+            contentStyle={{ borderRadius: 12, border: '1px solid hsl(214 20% 88%)', background: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(8px)', fontSize: 12, color: '#1E293B', boxShadow: '0 4px 16px -4px rgba(0,0,0,0.12)' }}
             formatter={(v: number, n: string) => [`${v} (${((v / total) * 100).toFixed(1)}%)`, n]}
           />
           <Legend verticalAlign="bottom" iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 11, color: AXIS_COLOR, paddingTop: 8 }} />

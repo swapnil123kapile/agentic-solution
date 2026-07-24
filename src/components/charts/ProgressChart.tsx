@@ -26,7 +26,7 @@ export function ProgressChart({ data }: { data: { timestep: number; label: strin
           <XAxis dataKey="label" tick={{ fontSize: 11, fill: AXIS_COLOR }} axisLine={false} tickLine={false} />
           <YAxis tick={{ fontSize: 11, fill: AXIS_COLOR }} axisLine={false} tickLine={false} />
           <Tooltip
-            contentStyle={{ borderRadius: 12, border: '1px solid rgba(148,163,184,0.15)', background: 'hsl(222 44% 10% / 0.95)', backdropFilter: 'blur(8px)', fontSize: 12, color: '#E2E8F0' }}
+            contentStyle={{ borderRadius: 12, border: '1px solid hsl(214 20% 88%)', background: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(8px)', fontSize: 12, color: '#1E293B', boxShadow: '0 4px 16px -4px rgba(0,0,0,0.12)' }}
             formatter={(v: number, n: string) => [v.toLocaleString(), n === 'dbWins' ? 'DB Wins' : n === 'competitorWins' ? 'Competitor Wins' : 'Drop-offs']}
           />
           <Legend verticalAlign="top" iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 11, color: AXIS_COLOR, paddingBottom: 8 }} />
