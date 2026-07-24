@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion';
-import { ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface SectionBadgeProps {
@@ -11,7 +10,7 @@ export function SectionBadge({ number, className }: SectionBadgeProps) {
   return (
     <span
       className={cn(
-        'flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-xs font-bold text-primary ring-1 ring-primary/15',
+        'flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-xs font-bold text-primary ring-1 ring-primary/20',
         className
       )}
     >
@@ -41,7 +40,7 @@ export function CardAction({ icon: Icon, label, onClick, variant = 'default', di
       title={label}
       className={cn(
         'flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-all',
-        'hover:bg-muted hover:text-foreground',
+        'hover:bg-black/5 hover:text-foreground',
         variant === 'accent' && 'hover:bg-primary/10 hover:text-primary',
         variant === 'danger' && 'hover:bg-danger/10 hover:text-danger',
         disabled && 'cursor-not-allowed opacity-40 hover:bg-transparent hover:text-muted-foreground'
@@ -49,14 +48,6 @@ export function CardAction({ icon: Icon, label, onClick, variant = 'default', di
     >
       <Icon className="h-4 w-4" />
     </motion.button>
-  );
-}
-
-export function ChevronToggle({ open }: { open: boolean }) {
-  return (
-    <motion.span animate={{ rotate: open ? 90 : 0 }} transition={{ duration: 0.2 }} className="text-muted-foreground">
-      <ChevronRight className="h-4 w-4" />
-    </motion.span>
   );
 }
 

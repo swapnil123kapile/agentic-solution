@@ -1,15 +1,10 @@
 // ============================================================
-// Boardroom AI — AI Lending Advisory Platform
+// Boardroom AI — Agentic Lending World Simulation Platform
 // Shared TypeScript Types
 // ============================================================
 
 export type Role = 'user' | 'assistant';
 export type AIModel = 'GPT-4o' | 'Claude 3.5' | 'Gemini 1.5';
-
-export interface ChatIntent {
-  sectionKey: SimulationSectionKey | null;
-  markdown: string;
-}
 
 export interface ChatMessage {
   id: string;
@@ -18,6 +13,11 @@ export interface ChatMessage {
   createdAt: number;
   section?: SimulationSectionKey;
   streaming?: boolean;
+}
+
+export interface ChatIntent {
+  sectionKey: SimulationSectionKey | null;
+  markdown: string;
 }
 
 export type SimulationStatus = 'idle' | 'running' | 'completed' | 'failed';
@@ -32,42 +32,50 @@ export type SimulationSectionKey =
   | 'improvementSimulator'
   | 'recommendations'
   | 'customerFeedback'
-  | 'scenarioComparison';
+  | 'scenarioComparison'
+  | 'worldIntelligence'
+  | 'marketplaceIntelligence'
+  | 'bankIntelligence'
+  | 'consumerIntelligence'
+  | 'simulationHealth';
 
-// ---------- Card 1: Simulation Summary ----------
+// ---------- Simulation Summary ----------
 export interface SimulationSummary {
   scenarioName: string;
   status: SimulationStatus;
   currentTimestep: number;
   totalTimesteps: number;
-  progress: number; // 0-100
+  progress: number;
   personas: { banks: number; consumers: number };
   description: string;
 }
 
-// ---------- Card 2: Current KPIs ----------
+// ---------- KPIs ----------
 export interface SimulationKpis {
+  totalConsumers: number;
+  activeConsumers: number;
   dbWins: number;
   competitorWins: number;
   dropOffs: number;
   recoverableLosses: number;
-  dbWinRate: number; // percentage
-  totalCustomers: number;
+  conversionRate: number;
+  dbWinRate: number;
 }
 
-// ---------- Card 3: Simulation Progress ----------
+// ---------- Replay ----------
 export interface ReplayStep {
   timestep: number;
   label: string;
   dbWins: number;
   competitorWins: number;
   dropOffs: number;
+  activeConsumers: number;
 }
 export interface SimulationProgress {
   steps: ReplayStep[];
 }
 
-// ---------- Card 4: Bank Performance ----------
+// ---------- Bank Performance ----------
 export interface BankPerformance {
   bank: string;
   winRate: number;
@@ -78,7 +86,7 @@ export interface BankPerformanceData {
   banks: BankPerformance[];
 }
 
-// ---------- Card 5: Customer Funnel ----------
+// ---------- Funnel ----------
 export interface FunnelStage {
   id: string;
   stage: string;
@@ -89,7 +97,7 @@ export interface CustomerFunnel {
   stages: FunnelStage[];
 }
 
-// ---------- Card 6: Loss Analysis ----------
+// ---------- Loss Analysis ----------
 export interface LossReason {
   id: string;
   reason: string;
@@ -103,14 +111,13 @@ export interface LossAnalysis {
   recommendation: string;
 }
 
-// ---------- Card 7: Improvement Simulator ----------
+// ---------- Improvement Simulator ----------
 export interface ImprovementToggle {
   id: string;
   label: string;
   description: string;
   icon: string;
   active: boolean;
-  // projected deltas when active
   winRateDelta: number;
   recoverableDelta: number;
   dropOffDelta: number;
@@ -125,30 +132,33 @@ export interface ImprovementSimulator {
   toggles: ImprovementToggle[];
 }
 
-// ---------- Card 8: Recommendations ----------
+// ---------- Recommendations ----------
 export type Priority = 'high' | 'medium' | 'low';
 export type Complexity = 'high' | 'medium' | 'low';
+export type ImplementationStatus = 'not_started' | 'in_progress' | 'completed';
 export interface Recommendation {
   id: string;
   title: string;
   description: string;
   priority: Priority;
   expectedImpact: string;
+  expectedWinIncrease: number;
   complexity: Complexity;
   owner: string;
+  status: ImplementationStatus;
 }
 export interface Recommendations {
   recommendations: Recommendation[];
 }
 
-// ---------- Card 9: Customer Feedback ----------
+// ---------- Feedback ----------
 export type Sentiment = 'positive' | 'neutral' | 'negative';
 export interface FeedbackEntry {
   id: string;
   customer: string;
   persona: string;
   sentiment: Sentiment;
-  rating: number; // 1-5
+  rating: number;
   comment: string;
   timestep: number;
 }
@@ -156,7 +166,7 @@ export interface CustomerFeedback {
   entries: FeedbackEntry[];
 }
 
-// ---------- Card 10: Scenario Comparison ----------
+// ---------- Scenario Comparison ----------
 export interface ScenarioKpi {
   label: string;
   baseline: number;
@@ -169,7 +179,124 @@ export interface ScenarioComparison {
   summary: string;
 }
 
-// ---------- Full Simulation State ----------
+// ---------- World Intelligence ----------
+export type NewsCategory = 'economic' | 'interest_rate' | 'inflation' | 'employment' | 'sentiment' | 'policy';
+export interface WorldNewsItem {
+  id: string;
+  timestep: number;
+  category: NewsCategory;
+  headline: string;
+  summary: string;
+  sentiment: Sentiment;
+  impact: 'high' | 'medium' | 'low';
+}
+export interface WorldIntelligence {
+  items: WorldNewsItem[];
+}
+
+// ---------- Marketplace Intelligence ----------
+export interface MarketplaceRanking {
+  rank: number;
+  bank: string;
+  bankId: string;
+  score: number;
+  visibility: number;
+  rankChange: number;
+}
+export interface MarketplaceRecommendation {
+  id: string;
+  bank: string;
+  title: string;
+  detail: string;
+  priority: Priority;
+}
+export interface MarketplaceIntelligence {
+  rankings: MarketplaceRanking[];
+  recommendations: MarketplaceRecommendation[];
+  trends: { timestep: number; visibilityAvg: number; offersTotal: number }[];
+}
+
+// ---------- Bank Intelligence ----------
+export interface BankOffer {
+  offerId: string;
+  productName: string;
+  productType: string;
+  interestRateApr: number;
+  effectiveRateApr: number;
+  processingFeePct: number;
+  minAmount: number;
+  maxAmount: number;
+  minTermMonths: number;
+  maxTermMonths: number;
+}
+export interface BankAction {
+  timestep: number;
+  actionType: string;
+  detail: string;
+  visibility: 'public' | 'private';
+}
+export interface BankMarketingCampaign {
+  timestep: number;
+  description: string;
+}
+export interface BankIntelligenceItem {
+  bankId: string;
+  bankName: string;
+  shortName: string;
+  color: string;
+  reputation: number;
+  winRate: number;
+  offers: BankOffer[];
+  actions: BankAction[];
+  campaigns: BankMarketingCampaign[];
+}
+export interface BankIntelligenceData {
+  banks: BankIntelligenceItem[];
+}
+
+// ---------- Consumer Intelligence ----------
+export interface ConsumerAction {
+  timestep: number;
+  actionType: string;
+  funnelStageBefore: string;
+  funnelStageAfter: string;
+  selectedBank: string;
+}
+export interface ConsumerIntelligenceItem {
+  consumerId: string;
+  consumerName: string;
+  persona: string;
+  funnelStage: string;
+  selectedBank: string;
+  approvalStatus: string;
+  loanAmount: number;
+  interestRate: number;
+  journey: ConsumerAction[];
+}
+export interface ConsumerIntelligenceData {
+  consumers: ConsumerIntelligenceItem[];
+}
+
+// ---------- Simulation Health ----------
+export type ValidationStatus = 'valid' | 'repaired' | 'invalid';
+export interface SimHealthIssue {
+  id: string;
+  timestep: number;
+  source: string;
+  status: ValidationStatus;
+  errorCount: number;
+  repairStatus: string;
+  message: string;
+}
+export interface SimulationHealth {
+  totalRows: number;
+  validRows: number;
+  repairedRows: number;
+  invalidRows: number;
+  issues: SimHealthIssue[];
+}
+
+// ---------- Full Simulation ----------
 export interface Simulation {
   summary: SimulationSummary;
   kpis: SimulationKpis;
@@ -181,27 +308,12 @@ export interface Simulation {
   recommendations: Recommendations;
   feedback: CustomerFeedback;
   comparison: ScenarioComparison;
+  world: WorldIntelligence;
+  marketplace: MarketplaceIntelligence;
+  bankIntel: BankIntelligenceData;
+  consumerIntel: ConsumerIntelligenceData;
+  health: SimulationHealth;
 }
-
-export interface SectionMeta {
-  key: SimulationSectionKey;
-  number: number;
-  title: string;
-  icon: string;
-}
-
-export const SECTION_ORDER: SectionMeta[] = [
-  { key: 'simulationSummary', number: 1, title: 'Simulation Summary', icon: 'Activity' },
-  { key: 'currentKpis', number: 2, title: 'Current KPIs', icon: 'Gauge' },
-  { key: 'simulationProgress', number: 3, title: 'Simulation Progress', icon: 'PlayCircle' },
-  { key: 'bankPerformance', number: 4, title: 'Bank Performance', icon: 'Building2' },
-  { key: 'customerFunnel', number: 5, title: 'Customer Funnel', icon: 'Filter' },
-  { key: 'lossAnalysis', number: 6, title: 'Loss Analysis', icon: 'TrendingDown' },
-  { key: 'improvementSimulator', number: 7, title: 'Improvement Simulator', icon: 'SlidersHorizontal' },
-  { key: 'recommendations', number: 8, title: 'Recommendations', icon: 'Lightbulb' },
-  { key: 'customerFeedback', number: 9, title: 'Customer Feedback', icon: 'MessageSquareQuote' },
-  { key: 'scenarioComparison', number: 10, title: 'Scenario Comparison', icon: 'GitCompare' },
-];
 
 export const SCENARIOS = ['Baseline', 'Aggressive Pricing', 'Faster Approval', 'Digital-First', 'Premium Service'] as const;
 export type ScenarioName = (typeof SCENARIOS)[number];

@@ -4,9 +4,13 @@ import {
   Search,
   Bell,
   ChevronDown,
-  Landmark,
+  LayoutGrid,
   Play,
+  Pause,
+  SkipForward,
+  SkipBack,
   Clock,
+  Gauge,
 } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -40,6 +44,10 @@ export function TopNav({ onGenerate }: TopNavProps) {
   const timestep = useAppStore((s) => s.selectedTimestep);
   const total = useAppStore((s) => s.simulation.summary.totalTimesteps);
   const status = useAppStore((s) => s.simulation.summary.status);
+  const isPlaying = useAppStore((s) => s.isPlaying);
+  const togglePlay = useAppStore((s) => s.togglePlay);
+  const stepForward = useAppStore((s) => s.stepForward);
+  const stepBackward = useAppStore((s) => s.stepBackward);
 
   const handleGenerate = () => {
     runSimulation();
@@ -50,15 +58,15 @@ export function TopNav({ onGenerate }: TopNavProps) {
     status === 'running' ? 'bg-warning' : status === 'completed' ? 'bg-success' : 'bg-muted-foreground';
 
   return (
-    <header className="flex h-[72px] shrink-0 items-center justify-between border-b border-border bg-white px-4 lg:px-6">
+    <header className="flex h-[72px] shrink-0 items-center justify-between border-b border-border glass-nav px-4 lg:px-6">
       {/* Left: logo + name */}
       <div className="flex items-center gap-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-blue-600 text-white shadow-glow">
-          <Landmark className="h-5 w-5" />
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-orange-600 text-white shadow-glow">
+          <LayoutGrid className="h-5 w-5" />
         </div>
         <div className="hidden flex-col leading-tight sm:flex">
           <span className="text-[15px] font-bold tracking-tight text-foreground">
-            Boardroom <span className="text-primary">AI</span>
+            Boardroom <span className="gradient-text">AI</span>
           </span>
           <span className="text-[11px] font-medium text-muted-foreground">Advisory Platform</span>
         </div>
@@ -69,20 +77,20 @@ export function TopNav({ onGenerate }: TopNavProps) {
         <div className="relative w-full max-w-xl">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
-            placeholder="Search simulations, scenarios, personas…"
-            className="h-10 w-full rounded-xl border border-border bg-muted/50 pl-10 pr-16 text-sm text-foreground placeholder:text-muted-foreground outline-none transition focus:border-primary/50 focus:bg-white focus:ring-4 focus:ring-primary/10"
+            placeholder="Search simulations, banks, consumers, scenarios…"
+            className="h-10 w-full rounded-xl border border-border bg-muted/40 pl-10 pr-16 text-sm text-foreground placeholder:text-muted-foreground outline-none transition focus:border-primary/50 focus:bg-card focus:ring-4 focus:ring-primary/10"
           />
-          <kbd className="absolute right-3 top-1/2 hidden -translate-y-1/2 rounded-md border border-border bg-white px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground lg:inline-block">
+          <kbd className="absolute right-3 top-1/2 hidden -translate-y-1/2 rounded-md border border-border bg-card px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground lg:inline-block">
             ⌘K
           </kbd>
         </div>
       </div>
 
-      {/* Right: scenario selector, timestep, notifications, profile, generate */}
+      {/* Right controls */}
       <div className="flex items-center gap-2">
         {/* Scenario selector */}
         <Select value={selectedScenario} onValueChange={(v) => setScenario(v as ScenarioName)}>
-          <SelectTrigger className="hidden h-10 w-[160px] gap-2 rounded-xl border-border bg-muted/40 text-sm font-medium lg:flex">
+          <SelectTrigger className="hidden h-10 w-[150px] gap-2 rounded-xl border-border bg-muted/40 text-sm font-medium lg:flex">
             <SelectValue />
           </SelectTrigger>
           <SelectContent className="rounded-xl">
@@ -94,23 +102,42 @@ export function TopNav({ onGenerate }: TopNavProps) {
           </SelectContent>
         </Select>
 
-        {/* Current timestep */}
-        <div className="hidden h-10 items-center gap-2 rounded-xl border border-border bg-muted/30 px-3 xl:flex">
-          <Clock className="h-4 w-4 text-muted-foreground" />
-          <div className="flex items-center gap-1.5">
-            <span className="text-xs font-medium text-muted-foreground">Timestep</span>
-            <span className="text-sm font-bold text-foreground">{timestep}</span>
-            <span className="text-xs text-muted-foreground">/ {total}</span>
-            <span className={cn('ml-1 h-2 w-2 rounded-full', statusColor)} />
+        {/* Replay controls */}
+        <div className="hidden h-10 items-center gap-1 rounded-xl border border-border bg-muted/30 px-2 xl:flex">
+          <button
+            onClick={stepBackward}
+            disabled={timestep <= 1}
+            className="flex h-7 w-7 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-black/5 hover:text-foreground disabled:opacity-30"
+          >
+            <SkipBack className="h-4 w-4" />
+          </button>
+          <button
+            onClick={togglePlay}
+            className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/15 text-primary transition hover:bg-primary/25"
+          >
+            {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+          </button>
+          <button
+            onClick={stepForward}
+            disabled={timestep >= total}
+            className="flex h-7 w-7 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-black/5 hover:text-foreground disabled:opacity-30"
+          >
+            <SkipForward className="h-4 w-4" />
+          </button>
+          <div className="ml-1 flex items-center gap-1.5 border-l border-border pl-2">
+            <Clock className="h-3.5 w-3.5 text-muted-foreground" />
+            <span className="text-xs font-bold text-foreground">{timestep}</span>
+            <span className="text-xs text-muted-foreground">/{total}</span>
+            <span className={cn('ml-1 h-2 w-2 rounded-full', statusColor, status === 'running' && 'animate-pulse-dot')} />
           </div>
         </div>
 
         {/* Notifications */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="relative flex h-10 w-10 items-center justify-center rounded-xl text-muted-foreground transition hover:bg-muted hover:text-foreground">
+            <button className="relative flex h-10 w-10 items-center justify-center rounded-xl text-muted-foreground transition hover:bg-black/5 hover:text-foreground">
               <Bell className="h-[18px] w-[18px]" />
-              <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-danger ring-2 ring-white" />
+              <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-danger ring-2 ring-background" />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-72 rounded-xl p-0">
@@ -118,8 +145,8 @@ export function TopNav({ onGenerate }: TopNavProps) {
             <DropdownMenuSeparator />
             {[
               { t: 'Simulation completed — Baseline', d: '2 min ago', c: 'bg-success' },
-              { t: 'Loss analysis ready', d: '12 min ago', c: 'bg-primary' },
-              { t: 'New customer feedback received', d: '1 hr ago', c: 'bg-warning' },
+              { t: 'Price war detected at T7', d: '12 min ago', c: 'bg-warning' },
+              { t: 'New marketplace ranking change', d: '1 hr ago', c: 'bg-primary' },
             ].map((n) => (
               <DropdownMenuItem key={n.t} className="flex items-start gap-3 px-4 py-3 text-sm">
                 <span className={cn('mt-1.5 h-2 w-2 shrink-0 rounded-full', n.c)} />
@@ -145,15 +172,15 @@ export function TopNav({ onGenerate }: TopNavProps) {
               className="inline-block h-4 w-4 rounded-full border-2 border-white/40 border-t-white"
             />
           ) : (
-            <Play className="h-4 w-4" />
+            <Gauge className="h-4 w-4" />
           )}
-          {simulationRunning ? 'Running…' : 'Generate'}
+          {simulationRunning ? 'Running…' : 'Run Simulation'}
         </Button>
 
         {/* Profile */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex items-center gap-2 rounded-xl p-1 pr-2 transition hover:bg-muted">
+            <button className="flex items-center gap-2 rounded-xl p-1 pr-2 transition hover:bg-black/5">
               <Avatar className="h-8 w-8 ring-2 ring-primary/20">
                 <AvatarFallback className="bg-primary text-xs font-bold text-white">SS</AvatarFallback>
               </Avatar>

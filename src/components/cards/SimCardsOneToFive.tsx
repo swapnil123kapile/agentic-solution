@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Activity, Gauge, PlayCircle, Building2, Filter, Trophy, Swords, UserMinus, RotateCcw, Percent } from 'lucide-react';
+import { Activity, Gauge, PlayCircle, Building2, Filter, Trophy, Swords, UserMinus, RotateCcw, Percent, Users } from 'lucide-react';
 import { useAppStore } from '@/store/useAppStore';
 import { useCountUp } from '@/hooks/useCountUp';
 import { PreviewCardShell } from '@/components/common/PreviewCardShell';
@@ -16,15 +16,14 @@ import type { SimulationStatus } from '@/types';
 // ============================================================
 const STATUS_META: Record<SimulationStatus, { label: string; color: string; badge: string }> = {
   idle: { label: 'Idle', color: 'bg-muted-foreground', badge: 'bg-muted text-muted-foreground border-border' },
-  running: { label: 'Running', color: 'bg-warning', badge: 'bg-warning/10 text-warning border-warning/20' },
-  completed: { label: 'Completed', color: 'bg-success', badge: 'bg-success/10 text-success border-success/20' },
-  failed: { label: 'Failed', color: 'bg-danger', badge: 'bg-danger/10 text-danger border-danger/20' },
+  running: { label: 'Running', color: 'bg-warning', badge: 'bg-warning/15 text-warning border-warning/30' },
+  completed: { label: 'Completed', color: 'bg-success', badge: 'bg-success/15 text-success border-success/30' },
+  failed: { label: 'Failed', color: 'bg-danger', badge: 'bg-danger/15 text-danger border-danger/30' },
 };
 
 export function SimulationSummaryCard() {
   const summary = useAppStore((s) => s.simulation.summary);
   const progress = useCountUp(summary.progress);
-
   const meta = STATUS_META[summary.status];
 
   return (
@@ -32,12 +31,12 @@ export function SimulationSummaryCard() {
       <div className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/15 text-primary ring-1 ring-primary/20">
               <Activity className="h-5 w-5" />
             </div>
             <div>
               <p className="text-base font-bold text-foreground">{summary.scenarioName}</p>
-              <p className="text-xs text-muted-foreground">{summary.personas.banks} banks · {summary.personas.consumers.toLocaleString()} consumers</p>
+              <p className="text-xs text-muted-foreground">{summary.personas.banks} banks · {summary.personas.consumers} consumers</p>
             </div>
           </div>
           <Badge variant="outline" className={cn('border px-2.5 py-1 text-xs font-semibold', meta.badge)}>
@@ -45,15 +44,12 @@ export function SimulationSummaryCard() {
             {meta.label}
           </Badge>
         </div>
-
         <p className="text-[13px] leading-relaxed text-muted-foreground">{summary.description}</p>
-
         <div className="grid grid-cols-3 gap-3">
           <SummaryStat label="Timestep" value={`${summary.currentTimestep}`} sub={`/ ${summary.totalTimesteps}`} />
           <SummaryStat label="Progress" value={`${Math.round(progress)}%`} />
-          <SummaryStat label="Consumers" value={summary.personas.consumers.toLocaleString()} />
+          <SummaryStat label="Consumers" value={summary.personas.consumers.toString()} />
         </div>
-
         <div>
           <div className="mb-1.5 flex items-center justify-between text-xs">
             <span className="font-medium text-muted-foreground">Simulation progress</span>
@@ -68,7 +64,7 @@ export function SimulationSummaryCard() {
 
 function SummaryStat({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
-    <div className="rounded-xl border border-border bg-white p-3">
+    <div className="rounded-xl border border-border bg-card/60 p-3">
       <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">{label}</p>
       <p className="mt-0.5 text-lg font-bold text-foreground">
         {value} {sub && <span className="text-xs font-medium text-muted-foreground">{sub}</span>}
@@ -78,24 +74,30 @@ function SummaryStat({ label, value, sub }: { label: string; value: string; sub?
 }
 
 // ============================================================
-// Card 2: Current KPIs
+// Card 2: Executive KPI Cards
 // ============================================================
 export function CurrentKpisCard() {
   const kpis = useAppStore((s) => s.simulation.kpis);
+  const total = useCountUp(kpis.totalConsumers);
+  const active = useCountUp(kpis.activeConsumers);
   const dbWins = useCountUp(kpis.dbWins);
   const compWins = useCountUp(kpis.competitorWins);
   const dropOffs = useCountUp(kpis.dropOffs);
   const recoverable = useCountUp(kpis.recoverableLosses);
+  const conversion = useCountUp(kpis.conversionRate);
   const winRate = useCountUp(kpis.dbWinRate);
 
   return (
-    <PreviewCardShell sectionKey="currentKpis" number={2} title="Current KPIs" icon={Gauge}>
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
-        <KpiTile label="DB Wins" value={Math.round(dbWins)} accent="primary" icon={Trophy} />
-        <KpiTile label="Competitor Wins" value={Math.round(compWins)} accent="muted" icon={Swords} />
+    <PreviewCardShell sectionKey="currentKpis" number={2} title="Executive KPIs" icon={Gauge}>
+      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+        <KpiTile label="Total Consumers" value={Math.round(total)} accent="muted" icon={Users} />
+        <KpiTile label="Active" value={Math.round(active)} accent="info" icon={Activity} />
+        <KpiTile label="DB Wins" value={Math.round(dbWins)} accent="primary" icon={Trophy} highlight />
+        <KpiTile label="Competitor Wins" value={Math.round(compWins)} accent="secondary" icon={Swords} />
         <KpiTile label="Drop-offs" value={Math.round(dropOffs)} accent="danger" icon={UserMinus} />
         <KpiTile label="Recoverable" value={Math.round(recoverable)} accent="warning" icon={RotateCcw} />
-        <KpiTile label="DB Win Rate" value={winRate.toFixed(1)} suffix="%" accent="success" icon={Percent} highlight />
+        <KpiTile label="Conversion" value={conversion.toFixed(1)} suffix="%" accent="success" icon={Percent} />
+        <KpiTile label="DB Win Rate" value={winRate.toFixed(1)} suffix="%" accent="primary" icon={Trophy} highlight />
       </div>
     </PreviewCardShell>
   );
@@ -103,34 +105,20 @@ export function CurrentKpisCard() {
 
 const ACCENT_STYLES = {
   primary: 'text-primary bg-primary/10',
-  muted: 'text-slate-600 bg-slate-100',
+  secondary: 'text-secondary bg-secondary/10',
+  muted: 'text-slate-400 bg-slate-100/10',
   danger: 'text-danger bg-danger/10',
   warning: 'text-warning bg-warning/10',
   success: 'text-success bg-success/10',
+  info: 'text-info bg-info/10',
 };
 
-function KpiTile({
-  label,
-  value,
-  suffix,
-  accent,
-  highlight,
-  icon: Icon,
-}: {
-  label: string;
-  value: number | string;
-  suffix?: string;
-  accent: keyof typeof ACCENT_STYLES;
-  highlight?: boolean;
+function KpiTile({ label, value, suffix, accent, highlight, icon: Icon }: {
+  label: string; value: number | string; suffix?: string; accent: keyof typeof ACCENT_STYLES; highlight?: boolean;
   icon: React.ComponentType<{ className?: string }>;
 }) {
   return (
-    <div
-      className={cn(
-        'rounded-xl border p-3.5 transition',
-        highlight ? 'border-primary/30 bg-primary/5 shadow-soft' : 'border-border bg-white'
-      )}
-    >
+    <div className={cn('rounded-xl border p-3.5 transition', highlight ? 'border-primary/30 bg-primary/5 shadow-glow' : 'border-border bg-card/60')}>
       <div className="flex items-center justify-between">
         <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">{label}</p>
         <span className={cn('flex h-6 w-6 items-center justify-center rounded-md', ACCENT_STYLES[accent])}>
@@ -159,23 +147,14 @@ export function SimulationProgressCard() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Badge variant="outline" className="border-primary/20 bg-primary/5 text-xs font-semibold text-primary">
+            <Badge variant="outline" className="border-primary/30 bg-primary/10 text-xs font-semibold text-primary">
               Timestep {timestep}
             </Badge>
             <span className="text-xs text-muted-foreground">/ {total}</span>
           </div>
           <span className="text-xs text-muted-foreground">Drag to replay</span>
         </div>
-
-        <Slider
-          value={[timestep]}
-          min={1}
-          max={total}
-          step={1}
-          onValueChange={(v) => setTimestep(v[0])}
-          className="py-1"
-        />
-
+        <Slider value={[timestep]} min={1} max={total} step={1} onValueChange={(v) => setTimestep(v[0])} className="py-1" />
         <ProgressChart data={progress.steps} />
       </div>
     </PreviewCardShell>
@@ -191,18 +170,10 @@ export function BankPerformanceCard() {
     <PreviewCardShell sectionKey="bankPerformance" number={4} title="Bank Performance" icon={Building2}>
       <div className="space-y-4">
         <div className="flex flex-wrap gap-4 text-xs">
-          <LegendDot color="#2563EB" label="Win Rate" />
-          <LegendDot color="#10B981" label="Approval Rate" />
+          <LegendDot color="#F97316" label="Win Rate" />
+          <LegendDot color="#22D3EE" label="Approval Rate" />
         </div>
         <BankPerformanceChart data={banks.banks} />
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-          {banks.banks.slice(0, 6).map((b) => (
-            <div key={b.bank} className="rounded-lg border border-border bg-white px-3 py-2">
-              <p className="truncate text-xs font-medium text-foreground">{b.bank}</p>
-              <p className="text-sm font-bold text-primary">{b.winRate}%</p>
-            </div>
-          ))}
-        </div>
       </div>
     </PreviewCardShell>
   );
@@ -235,7 +206,7 @@ export function CustomerFunnelCard() {
               <div className="mb-1 flex items-center justify-between text-xs">
                 <span className="font-medium text-foreground">{stage.stage}</span>
                 <span className="text-muted-foreground">
-                  {stage.value.toLocaleString()} · <span className="font-semibold text-foreground">{conversion.toFixed(0)}%</span>
+                  {stage.value} · <span className="font-semibold text-foreground">{conversion.toFixed(0)}%</span>
                 </span>
               </div>
               <motion.div
@@ -243,12 +214,12 @@ export function CustomerFunnelCard() {
                 animate={{ width: `${pct}%`, opacity: 1 }}
                 transition={{ duration: 0.7, delay: i * 0.08, ease: 'easeOut' }}
                 className="h-9 rounded-lg shadow-soft"
-                style={{ background: `linear-gradient(90deg, ${stage.color}, ${stage.color}cc)` }}
+                style={{ background: `linear-gradient(90deg, ${stage.color}, ${stage.color}99)` }}
               />
             </div>
           );
         })}
-        <div className="mt-2 flex items-center justify-between rounded-lg bg-muted/40 px-3 py-2 text-xs">
+        <div className="mt-2 flex items-center justify-between rounded-lg bg-muted/30 px-3 py-2 text-xs">
           <span className="text-muted-foreground">Overall conversion</span>
           <span className="font-bold text-foreground">
             {((funnel.stages[funnel.stages.length - 1].value / funnel.stages[0].value) * 100).toFixed(1)}%

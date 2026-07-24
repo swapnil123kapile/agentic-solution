@@ -8,25 +8,29 @@ import { seedSimulation } from '@/data/sampleData';
 // mock data to the real FastAPI backend is a one-file change.
 //
 // EXPECTED BACKEND ENDPOINTS (FastAPI):
-//   POST /api/simulations/run          -> run a lending-world sim
-//   GET  /api/simulations/:id          -> full simulation JSON
-//   GET  /api/simulations/:id/kpis     -> KPIs (card 2)
-//   GET  /api/simulations/:id/funnel   -> funnel (card 5)
-//   GET  /api/simulations/:id/losses   -> loss analysis (card 6)
-//   POST /api/simulations/:id/improve  -> improvement projection (card 7)
+//   POST /api/simulations/run            -> run a lending-world sim
+//   GET  /api/simulations/:id            -> full simulation JSON
+//   GET  /api/simulations/:id/kpis       -> KPIs
+//   GET  /api/simulations/:id/funnel     -> funnel
+//   GET  /api/simulations/:id/losses     -> loss analysis
+//   GET  /api/simulations/:id/replay     -> timeline replay data
+//   POST /api/simulations/:id/improve    -> improvement projection
 //   GET  /api/simulations/:id/recommendations
 //   GET  /api/simulations/:id/feedback
-//   POST /api/simulations/compare      -> baseline vs improved (card 10)
-//   POST /api/chat                     -> copilot streaming (SSE)
-//   GET  /api/scenarios                -> available scenarios
-//   GET  /api/simulations/:id/replay   -> timeline replay data (card 3)
-//   GET  /api/export/csv/:id           -> CSV download
-//   GET  /api/export/pdf/:id           -> PDF download
+//   GET  /api/simulations/:id/world       -> world news events
+//   GET  /api/simulations/:id/marketplace -> rankings + trends
+//   GET  /api/simulations/:id/banks       -> bank intelligence
+//   GET  /api/simulations/:id/consumers   -> consumer intelligence
+//   GET  /api/simulations/:id/health      -> simulation health / validation
+//   POST /api/simulations/compare         -> baseline vs improved
+//   POST /api/chat                        -> copilot streaming (SSE)
+//   GET  /api/scenarios                   -> available scenarios
+//   GET  /api/export/csv/:id              -> CSV download
+//   GET  /api/export/pdf/:id              -> PDF download
+//   GET  /api/export/ppt/:id              -> PowerPoint download
 // ============================================================
 
 const API_BASE = (import.meta as unknown as { env?: Record<string, string> }).env?.VITE_API_BASE_URL ?? '';
-
-// Latency to simulate a real network round-trip while on mock data.
 const MOCK_DELAY = 280;
 
 function delay(ms: number): Promise<void> {
@@ -57,8 +61,6 @@ async function postJson<T>(path: string, body: unknown, fallback: T): Promise<T>
   return (await res.json()) as T;
 }
 
-// ---------- Simulation lifecycle ----------
-
 export async function fetchSimulation(scenario: string): Promise<Simulation> {
   return getJson(`/api/simulations/${encodeURIComponent(scenario)}`, seedSimulation);
 }
@@ -69,23 +71,17 @@ export interface RunSimulationResponse {
 }
 
 export async function runSimulation(scenario: string): Promise<RunSimulationResponse> {
-  return postJson('/api/simulations/run', { scenario }, {
-    simulationId: `sim-${Date.now()}`,
-    status: 'running',
-  });
+  return postJson('/api/simulations/run', { scenario }, { simulationId: `sim-${Date.now()}`, status: 'running' });
 }
 
-// ---------- Improvement projection ----------
-// POST /api/simulations/:id/improve  { activeLevers: string[] }
-export interface ImprovementRequest {
-  activeLevers: string[];
-}
+export interface ImprovementRequest { activeLevers: string[] }
 export interface ImprovementProjectionResponse {
   projectedWinRate: number;
   projectedRecoverable: number;
   projectedDropOffs: number;
   uplift: number;
 }
+
 export async function fetchImprovementProjection(
   levers: string[],
   fallback: ImprovementProjectionResponse
@@ -93,31 +89,13 @@ export async function fetchImprovementProjection(
   return postJson('/api/simulations/baseline/improve', { activeLevers: levers } as ImprovementRequest, fallback);
 }
 
-// ---------- Copilot chat ----------
-// POST /api/chat  { message, model, context }
-// Streaming via Server-Sent Events when the backend is live.
-export interface ChatRequest {
-  message: string;
-  model: string;
-  scenario: string;
-}
+export interface ChatRequest { message: string; model: string; scenario: string }
 
-export interface ChatIntent {
-  sectionKey: SimulationSectionKey | null;
-  markdown: string;
-}
-
-// ---------- Scenario compare ----------
-// POST /api/simulations/compare { baseline, improved }
-export async function fetchScenarioComparison(
-  baseline: string,
-  improved: string
-) {
+export async function fetchScenarioComparison(baseline: string, improved: string) {
   return postJson('/api/simulations/compare', { baseline, improved }, seedSimulation.comparison);
 }
 
-// ---------- Export ----------
-export function exportUrl(format: 'csv' | 'pdf', simulationId = 'baseline'): string {
+export function exportUrl(format: 'csv' | 'pdf' | 'ppt', simulationId = 'baseline'): string {
   if (API_BASE) return `${API_BASE}/api/export/${format}/${simulationId}`;
   return '';
 }
