@@ -4,7 +4,7 @@ import {
   Search,
   Bell,
   ChevronDown,
-  BrainCircuit,
+  Landmark,
   Play,
   Clock,
 } from 'lucide-react';
@@ -54,13 +54,13 @@ export function TopNav({ onGenerate }: TopNavProps) {
       {/* Left: logo + name */}
       <div className="flex items-center gap-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-blue-600 text-white shadow-glow">
-          <BrainCircuit className="h-5 w-5" />
+          <Landmark className="h-5 w-5" />
         </div>
         <div className="hidden flex-col leading-tight sm:flex">
           <span className="text-[15px] font-bold tracking-tight text-foreground">
             Boardroom <span className="text-primary">AI</span>
           </span>
-          <span className="text-[11px] font-medium text-muted-foreground">Lending Advisory Platform</span>
+          <span className="text-[11px] font-medium text-muted-foreground">Advisory Platform</span>
         </div>
       </div>
 
