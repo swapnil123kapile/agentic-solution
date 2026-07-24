@@ -13,8 +13,8 @@ export function SimulationBuilder() {
 
   return (
     <div className="flex h-full min-h-0 w-full">
-      {/* LEFT — 70% simulation preview */}
-      <div className="flex min-h-0 flex-1 flex-col" style={{ flexBasis: '70%' }}>
+      {/* LEFT — 80% simulation preview */}
+      <div className="flex min-h-0 flex-1 flex-col" style={{ flexBasis: '80%' }}>
         <div className="min-h-0 flex-1 overflow-hidden">
           <SimulationPreview />
         </div>
@@ -24,16 +24,16 @@ export function SimulationBuilder() {
       {/* Divider */}
       <div className="hidden w-px shrink-0 bg-border lg:block" />
 
-      {/* RIGHT — 30% copilot */}
+      {/* RIGHT — 20% copilot */}
       <AnimatePresence initial={false}>
         {copilotOpen && (
           <motion.div
             initial={{ width: 0, opacity: 0 }}
-            animate={{ width: '30%', opacity: 1 }}
+            animate={{ width: '20%' }}
             exit={{ width: 0, opacity: 0 }}
             transition={{ duration: 0.25, ease: 'easeInOut' }}
             className="hidden min-h-0 shrink-0 overflow-hidden lg:block"
-            style={{ flexBasis: '30%' }}
+            style={{ flexBasis: '20%' }}
           >
             <CopilotPanel />
           </motion.div>
@@ -43,7 +43,7 @@ export function SimulationBuilder() {
       {/* Toggle button for copilot panel */}
       <button
         onClick={() => setCopilotOpen((v) => !v)}
-        className="fixed right-0 top-1/2 z-30 hidden -translate-y-1/2 items-center gap-1 rounded-l-xl border border-r-0 border-border bg-white px-2 py-3 text-muted-foreground shadow-soft-md transition hover:text-primary lg:flex"
+        className="fixed right-0 top-1/2 z-30 hidden -translate-y-1/2 items-center gap-1 rounded-l-xl border border-r-0 border-border glass-strong px-2 py-3 text-muted-foreground shadow-soft-md transition hover:text-primary lg:flex"
         title={copilotOpen ? 'Hide Copilot' : 'Show Copilot'}
       >
         {copilotOpen ? <PanelRightClose className="h-4 w-4" /> : <PanelRightOpen className="h-4 w-4" />}
@@ -53,15 +53,11 @@ export function SimulationBuilder() {
       <button
         onClick={runSimulation}
         disabled={simulationRunning}
-        className="fixed bottom-5 right-5 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white shadow-glow transition hover:bg-primary/90 lg:hidden"
+        className="fixed bottom-5 right-5 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-primary to-orange-600 text-white shadow-glow transition hover:opacity-90 lg:hidden"
         title="Generate Simulation"
       >
         {simulationRunning ? (
-          <motion.span
-            animate={{ rotate: 360 }}
-            transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
-            className="inline-block h-5 w-5 rounded-full border-2 border-white/40 border-t-white"
-          />
+          <motion.span animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }} className="inline-block h-5 w-5 rounded-full border-2 border-white/40 border-t-white" />
         ) : (
           <Play className="h-5 w-5" />
         )}

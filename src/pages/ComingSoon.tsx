@@ -12,14 +12,14 @@ export function ComingSoon({ title, description }: ComingSoonProps) {
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-md rounded-2xl border border-border bg-white p-8 text-center shadow-soft"
+        className="max-w-md rounded-2xl border border-border bg-card/50 p-8 text-center shadow-soft backdrop-blur"
       >
-        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/15 text-primary ring-1 ring-primary/20">
           <Construction className="h-7 w-7" />
         </div>
         <h1 className="text-lg font-bold text-foreground">{title}</h1>
         <p className="mt-1.5 text-sm text-muted-foreground">
-          {description ?? 'This workspace is under construction. The Simulation Builder is where the action is.'}
+          {description ?? 'This workspace is under construction. The Executive Command Center is where the action is.'}
         </p>
       </motion.div>
     </div>

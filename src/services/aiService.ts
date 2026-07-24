@@ -1,4 +1,7 @@
 import type { AIModel, ChatIntent, Simulation } from '@/types';
+
+// ============================================================
+// AI Copilot service — maps user prompts to structured answers.
 // When the backend /api/chat (SSE) is live, replace resolvePrompt
 // with a real streaming call and keep the store's chunk logic.
 // ============================================================
@@ -18,12 +21,9 @@ const AI_MODELS: AIModel[] = ['GPT-4o', 'Claude 3.5', 'Gemini 1.5'];
 
 function modelTagline(model: AIModel): string {
   switch (model) {
-    case 'GPT-4o':
-      return 'OpenAI · Multi-modal reasoning';
-    case 'Claude 3.5':
-      return 'Anthropic · Long-context analysis';
-    case 'Gemini 1.5':
-      return 'Google · Native multimodal';
+    case 'GPT-4o': return 'OpenAI · Multi-modal reasoning';
+    case 'Claude 3.5': return 'Anthropic · Long-context analysis';
+    case 'Gemini 1.5': return 'Google · Native multimodal';
   }
 }
 
@@ -31,21 +31,21 @@ function summarizeMarkdown(sim: Simulation): string {
   const k = sim.kpis;
   return `## Simulation Summary — ${sim.summary.scenarioName}
 
-The **${sim.summary.scenarioName}** scenario ran across **${sim.summary.totalTimesteps} timesteps** with **${sim.summary.personas.banks} bank personas** competing for **${sim.summary.personas.consumers.toLocaleString()} consumer personas**.
+The **${sim.summary.scenarioName}** scenario ran across **${sim.summary.totalTimesteps} timesteps** with **${sim.summary.personas.banks} bank agents** competing for **${sim.summary.personas.consumers} consumer agents**.
 
 ### Headline KPIs
 | Metric | Value |
 | --- | --- |
-| DB Wins | ${k.dbWins.toLocaleString()} |
-| Competitor Wins | ${k.competitorWins.toLocaleString()} |
-| Drop-offs | ${k.dropOffs.toLocaleString()} |
-| Recoverable Losses | ${k.recoverableLosses.toLocaleString()} |
+| DB Wins | ${k.dbWins} |
+| Competitor Wins | ${k.competitorWins} |
+| Drop-offs | ${k.dropOffs} |
+| Recoverable Losses | ${k.recoverableLosses} |
 | **DB Win Rate** | **${k.dbWinRate}%** |
 
-### Takeaway
-DB secured a **${k.dbWinRate}% win rate**. Of the ${k.dropOffs.toLocaleString()} drop-offs, **${k.recoverableLosses.toLocaleString()}** are recoverable — primarily lost to competitor pricing.
+### Key Dynamics
+A price war emerged as banks repeatedly undercut each other on interest rates. **DKB** leads the marketplace with a 36.8% win rate, while Deutsche Bank trails at 5.3%.
 
-*Simulation Summary (Card 1) and Current KPIs (Card 2) have been updated.*`;
+*Simulation Summary and Executive KPIs have been updated.*`;
 }
 
 function lossesMarkdown(sim: Simulation): string {
@@ -64,7 +64,7 @@ ${rows}
 ### Recommended Action
 ${l.recommendation}
 
-*Loss Analysis (Card 6) has been updated with the chart above.*`;
+*Loss Analysis card has been updated.*`;
 }
 
 function compareMarkdown(sim: Simulation): string {
@@ -79,7 +79,7 @@ ${rows}
 ### Summary
 ${c.summary}
 
-*Scenario Comparison (Card 10) has been updated.*`;
+*Scenario Comparison card has been updated.*`;
 }
 
 function winRateMarkdown(sim: Simulation): string {
@@ -91,9 +91,9 @@ Current win rate is **${sim.kpis.dbWinRate}%**. Based on loss analysis, the high
 2. **Faster approval** (48h SLA) — +2.8pp
 3. **Digital-first journey** — +3.4pp
 
-Activating all levers projects a win rate of **48.9%** — a +12.5pp uplift.
+Activating all levers projects a win rate of **28.2%** — a +12.4pp uplift.
 
-*Toggle levers in the Improvement Simulator (Card 7) to see live projections.*`;
+*Toggle levers in the Improvement Simulator to see live projections.*`;
 }
 
 function suggestMarkdown(sim: Simulation): string {
@@ -104,12 +104,12 @@ Based on the simulation, here are the top prioritized actions:
 
 ${top.map((r, i) => `**${i + 1}. ${r.title}**\n- _${r.priority.toUpperCase()} priority · ${r.complexity} complexity_\n- Impact: ${r.expectedImpact}\n- Owner: ${r.owner}`).join('\n\n')}
 
-*Full recommendations are in Card 8.*`;
+*Full recommendations are in the AI Recommendations card.*`;
 }
 
 function funnelMarkdown(sim: Simulation): string {
   const f = sim.funnel;
-  const rows = f.stages.map((s) => `| ${s.stage} | ${s.value.toLocaleString()} |`).join('\n');
+  const rows = f.stages.map((s) => `| ${s.stage} | ${s.value} |`).join('\n');
   const lead = f.stages[0].value;
   const disb = f.stages[f.stages.length - 1].value;
   return `## Customer Funnel Analysis
@@ -124,9 +124,7 @@ ${rows}
 - **Offer → Accepted:** ${((f.stages[4].value / f.stages[3].value) * 100).toFixed(1)}%
 - **Overall Lead → Disbursed:** ${((disb / lead) * 100).toFixed(1)}%
 
-The biggest leak is **Application → Approval** — primarily from approval delays and SCHUFA rejections.
-
-*Customer Funnel (Card 5) has been updated.*`;
+*Customer Funnel card has been updated.*`;
 }
 
 function feedbackMarkdown(sim: Simulation): string {
@@ -136,13 +134,28 @@ function feedbackMarkdown(sim: Simulation): string {
 
 Across ${sim.feedback.entries.length} sampled reviews:
 
-- **Positive:** ${pos} customers — praise fast approval and digital experience
+- **Positive:** ${pos} customers — praise fast approval and competitive rates
 - **Negative:** ${neg} customers — frustration with competitor rates and approval delays
 
 > "${sim.feedback.entries[0].comment}"
 > — *${sim.feedback.entries[0].customer}, ${sim.feedback.entries[0].persona}*
 
-*Customer Feedback (Card 9) has been updated.*`;
+*Customer Feedback card has been updated.*`;
+}
+
+function marketplaceMarkdown(sim: Simulation): string {
+  const top3 = sim.marketplace.rankings.slice(0, 3);
+  return `## Marketplace Intelligence
+
+### Top 3 Banks
+${top3.map((r, i) => `${i + 1}. **${r.bank}** — Score ${r.score}, Visibility ${r.visibility}%${r.rankChange !== 0 ? ` (${r.rankChange > 0 ? '↑' : '↓'}${Math.abs(r.rankChange)})` : ''}`).join('\n')}
+
+### DB Position
+Deutsche Bank ranks **#5** with a score of ${sim.marketplace.rankings.find((r) => r.bankId === 'B001')?.score}. Key recommendations:
+- Optimize comparison portal listings
+- Match DKB's green energy rate (2.45% APR)
+
+*Marketplace Intelligence card has been updated.*`;
 }
 
 function reportMarkdown(sim: Simulation): string {
@@ -154,9 +167,12 @@ ${sim.summary.description}
 
 ### Results
 - **DB Win Rate:** ${k.dbWinRate}%
-- **DB Wins:** ${k.dbWins.toLocaleString()} / ${k.totalCustomers.toLocaleString()} customers
-- **Drop-offs:** ${k.dropOffs.toLocaleString()} (${k.recoverableLosses.toLocaleString()} recoverable)
+- **DB Wins:** ${k.dbWins} / ${k.totalConsumers} consumers
+- **Drop-offs:** ${k.dropOffs} (${k.recoverableLosses} recoverable)
 - **Top Loss Reason:** ${sim.losses.topReason}
+
+### Marketplace Leader
+DKB leads with 36.8% win rate and 98% visibility.
 
 ### Recommendations
 1. ${sim.recommendations.recommendations[0].title}
@@ -166,7 +182,7 @@ ${sim.summary.description}
 ### Projected Improvement
 Applying all levers: **${sim.comparison.kpis[0].improved}% win rate** (+${(sim.comparison.kpis[0].improved - k.dbWinRate).toFixed(1)}pp).
 
-*Executive report ready. Use the toolbar to export as PDF or CSV.*`;
+*Executive report ready. Use the toolbar to export as PDF, CSV, or PowerPoint.*`;
 }
 
 function resolvePrompt(prompt: string, sim: Simulation): ChatIntent {
@@ -180,17 +196,13 @@ function resolvePrompt(prompt: string, sim: Simulation): ChatIntent {
   if (pick('suggest', 'recommend', 'recommendation')) return { sectionKey: 'recommendations', markdown: suggestMarkdown(sim) };
   if (pick('funnel', 'conversion', 'stage')) return { sectionKey: 'customerFunnel', markdown: funnelMarkdown(sim) };
   if (pick('feedback', 'review', 'sentiment', 'customer said')) return { sectionKey: 'customerFeedback', markdown: feedbackMarkdown(sim) };
+  if (pick('marketplace', 'ranking', 'leaderboard', 'visibility')) return { sectionKey: 'marketplaceIntelligence', markdown: marketplaceMarkdown(sim) };
   if (pick('report', 'executive', 'export')) return { sectionKey: null, markdown: reportMarkdown(sim) };
 
   return {
     sectionKey: null,
-    markdown: `I can analyze this lending simulation across KPIs, losses, funnel, feedback, and scenarios. Try a suggested prompt like **"Explain Customer Losses"** or **"Improve Win Rate"** and I'll update the relevant preview card.`,
+    markdown: `I can analyze this lending world simulation across KPIs, losses, funnel, marketplace intelligence, bank actions, consumer journeys, and feedback. Try a suggested prompt like **"Explain Customer Losses"** or **"Marketplace Intelligence"** and I'll update the relevant card.`,
   };
 }
 
-export {
-  SUGGESTED_PROMPTS,
-  AI_MODELS,
-  modelTagline,
-  resolvePrompt,
-};
+export { SUGGESTED_PROMPTS, AI_MODELS, modelTagline, resolvePrompt };

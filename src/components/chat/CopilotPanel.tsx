@@ -30,15 +30,15 @@ export function CopilotPanel() {
   const hasConversation = messages.length > 1;
 
   return (
-    <div className="flex h-full flex-col bg-background">
+    <div className="flex h-full flex-col bg-background/80">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-border bg-white px-4 py-3">
+      <div className="flex items-center justify-between border-b border-border glass-nav px-4 py-3">
         <div className="flex items-center gap-2.5">
           <div className="relative">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-blue-600 text-white shadow-glow">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-orange-600 text-white shadow-glow">
               <Bot className="h-[18px] w-[18px]" />
             </div>
-            <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-success ring-2 ring-white" />
+            <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-success ring-2 ring-background" />
           </div>
           <div>
             <p className="text-sm font-bold text-foreground">Boardroom AI</p>
@@ -49,7 +49,7 @@ export function CopilotPanel() {
         </div>
 
         <Select value={model} onValueChange={(v) => setModel(v as AIModel)}>
-          <SelectTrigger className="h-9 w-[130px] gap-1 rounded-xl border-border bg-muted/40 text-xs font-medium">
+          <SelectTrigger className="h-9 w-[110px] gap-1 rounded-xl border-border bg-muted/40 text-xs font-medium">
             <SelectValue />
           </SelectTrigger>
           <SelectContent className="rounded-xl">
